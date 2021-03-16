@@ -3,7 +3,13 @@
     <div class="block" :class="{ animate: animatedBlock }"></div>
     <button @click="animateBlock">Animate</button>
   </div>
-  <base-modal @close="hideDialog" v-if="dialogIsVisible">
+  <div class="container">
+    <transition name="para">
+      <p v-if="paraIsVisible">This is visible somethimes</p>
+    </transition>
+    <button @click="toggleParagraph">Toggle Paragraph</button>
+  </div>
+  <base-modal @close="hideDialog" :open="dialogIsVisible">
     <p>This is a test dialog!</p>
     <button @click="hideDialog">Close it!</button>
   </base-modal>
@@ -18,19 +24,24 @@ export default {
     return {
       animatedBlock: false,
       dialogIsVisible: false,
+      paraIsVisible: false
     };
   },
   methods: {
+    toggleParagraph() {
+      this.paraIsVisible = !this.paraIsVisible;
+    },
     animateBlock() {
       this.animatedBlock = true;
+      // console.log('hey');
     },
     showDialog() {
       this.dialogIsVisible = true;
     },
     hideDialog() {
       this.dialogIsVisible = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -63,7 +74,7 @@ button:active {
   height: 8rem;
   background-color: #290033;
   margin-bottom: 2rem;
-  transition: all 0.5s ease-out;
+  /* transition: all 0.5s ease-out; */
 }
 .container {
   max-width: 40rem;
@@ -78,6 +89,53 @@ button:active {
 }
 
 .animate {
-  transform: translateX(-150px);
+  /* animation: slide-fade 3s ease-out forwards; */
+  -webkit-animation: slide-scale 3s ease-out forwards;
+}
+
+.para-enter-from {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.para-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.para-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.para-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.para-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.para-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+@-webkit-keyframes slide-scale {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+
+  30% {
+    transform: translateX(50px) scale(1.1);
+  }
+
+  70% {
+    transform: translateX(-120px) scale(1.2);
+  }
+
+  100% {
+    transform: translateX(-150px) scale(1);
+  }
 }
 </style>
